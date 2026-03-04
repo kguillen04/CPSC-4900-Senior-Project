@@ -50,13 +50,12 @@ const questionSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
-questionSchema.pre("validate", function (next) {
+questionSchema.pre("validate", function () {
     if (this.choices && Number.isInteger(this.correctIndex)) {
         if (this.correctIndex < 0 || this.correctIndex >= this.choices.length) {
             this.invalidate("correctIndex", "correctIndex must be a valid index")
         }
     }
-    next();
 });
 
 export default mongoose.model("Question", questionSchema);

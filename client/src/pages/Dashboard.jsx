@@ -51,9 +51,9 @@ export default function Dashboard() {
         </button>
 
         {/* placeholders for later */}
-        <Link to="/quiz" style={{ padding: 10, border: "1px solid #ddd", borderRadius: 6 }}>
-          Start Quiz (coming soon)
-        </Link>
+        <button onClick={() => navigate("/quiz")} style={{ padding: 10, marginTop: 12 }}>
+          Start Quiz
+        </button>
       </div>
 
       <div

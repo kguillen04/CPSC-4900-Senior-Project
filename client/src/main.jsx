@@ -9,6 +9,7 @@ import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import Quiz from "./pages/Quiz";
 import "./index.css";
 
 const router = createBrowserRouter([
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: "dashboard",
         element: <Dashboard />
+      },
+      {
+        path: "quiz",
+        element: <Quiz />
       },
     ],
   },

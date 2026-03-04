@@ -22,6 +22,7 @@ export default function Login({ onAuth }) {
                 "user",
                 JSON.stringify({ userId: data.userId, email: data.email})
             );
+            navigate("/dashboard");
         }
         catch (err) {
             setError(err.message);

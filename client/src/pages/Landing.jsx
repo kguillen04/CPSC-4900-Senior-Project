@@ -18,13 +18,6 @@ export default function Landing() {
             >
             Login
             </button>
-
-            <button
-            onClick={() => navigate("/register")}
-            style={{ padding: 12, fontSize: 16 }}
-            >
-            Register
-            </button>
         </div>
         </div>
     );

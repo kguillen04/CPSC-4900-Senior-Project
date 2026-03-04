@@ -8,6 +8,7 @@ import App from "./App";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
 import "./index.css";
 
 const router = createBrowserRouter([
@@ -27,10 +28,10 @@ const router = createBrowserRouter([
         path: "register",
         element: <Register />,
       },
-      // {
-      //   path: "dashboard",
-      //   element: <Dashboard />
-      // },
+      {
+        path: "dashboard",
+        element: <Dashboard />
+      },
     ],
   },
 ]);

@@ -26,7 +26,7 @@ const attemptSchema = new mongoose.Schema(
             type: Number,
             required: true,
             min: 1,
-            max: 1,
+            max: 5,
             index: true,
         },
 

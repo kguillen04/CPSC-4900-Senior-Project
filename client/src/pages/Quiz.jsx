@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getJSON } from "../api";
+import { getJSON, postJSON } from "../api";
 
 export default function Quiz() {
     const navigate = useNavigate();
@@ -8,8 +8,11 @@ export default function Quiz() {
     const [question, setQuestion] = useState(null);
     const [selectedIndex, setSelectedIndex] = useState(null);
 
-    const [loading, setLoading] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+
+    const [feedback, setFeedback] = useState(null);
+    const [submitting, setSubmitting] = useState(false);
 
     // hardcoding for now, but we will make it adaptive later
     const concept = "variables";
@@ -19,6 +22,7 @@ export default function Quiz() {
         setLoading(true);
         setError("");
         setSelectedIndex(null);
+        setFeedback(null);
 
         try {
             const q = await getJSON(
@@ -31,6 +35,34 @@ export default function Quiz() {
         } finally {
             setLoading(false);
         }
+    }
+
+    async function handleSubmit() {
+        if (selectedIndex == null || !question?._id) return;
+
+        setSubmitting(true);
+        setError("");
+
+        try {
+            const stored = JSON.parse(localStorage.getItem("user") || "null");
+            if (!stored?.userId) {
+                navigate("/login");
+                return;
+            }
+
+            const result = await postJSON("/api/attempts", {
+                userId: stored.userId,
+                questionId: question._id,
+                selectedIndex,
+            });
+
+            setFeedback(result);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setSubmitting(false);
+        }
+
     }
 
     useEffect(() => {
@@ -61,6 +93,8 @@ export default function Quiz() {
 
     if (!question) return null;
 
+    const answered = feedback !== null;
+
     return (
         <div style={{ maxWidth: 700, margin: "40px auto", fontFamily: "sans-serif" }}>
         <h2>Quiz</h2>
@@ -83,23 +117,55 @@ export default function Quiz() {
         </div>
 
         <div style={{ marginTop: 16, display: "grid", gap: 10 }}>
-            {question.choices.map((choice, idx) => (
-            <button
+            {question.choices.map((choice, idx) => {
+            const isSelected = selectedIndex === idx;
+            const isCorrectChoice = answered && feedback?.correctIndex === idx;
+            const isWrongSelected = answered && isSelected && !feedback?.correct;
+
+            let background = "white";
+            if (isSelected) background = "#f3f4f6";
+            if (isCorrectChoice) background = "#dcfce7"; // light green
+            if (isWrongSelected) background = "#fee2e2"; // light red
+
+            return (
+                <button
                 key={idx}
                 onClick={() => setSelectedIndex(idx)}
+                disabled={answered}
                 style={{
-                padding: 12,
-                textAlign: "left",
-                borderRadius: 8,
-                border: "1px solid #ddd",
-                background: selectedIndex === idx ? "#f3f4f6" : "white",
-                cursor: "pointer",
+                    padding: 12,
+                    textAlign: "left",
+                    borderRadius: 8,
+                    border: "1px solid #ddd",
+                    background,
+                    cursor: answered ? "default" : "pointer",
                 }}
-            >
+                >
                 {choice}
-            </button>
-            ))}
+                </button>
+            );
+            })}
         </div>
+
+        {feedback && (
+            <div
+            style={{
+                marginTop: 16,
+                padding: 12,
+                border: "1px solid #ddd",
+                borderRadius: 8,
+            }}
+            >
+            <div style={{ fontWeight: "bold" }}>
+                {feedback.correct ? "Correct!" : "Incorrect"}
+            </div>
+            {feedback.explanation && (
+                <div style={{ marginTop: 8, whiteSpace: "pre-wrap" }}>
+                {feedback.explanation}
+                </div>
+            )}
+            </div>
+        )}
 
         <div style={{ marginTop: 16, display: "flex", gap: 10 }}>
             <button onClick={loadQuestion} style={{ padding: 10 }}>
@@ -107,11 +173,11 @@ export default function Quiz() {
             </button>
 
             <button
-            disabled={selectedIndex === null}
-            onClick={() => alert(`Selected choice index: ${selectedIndex}`)}
+            disabled={selectedIndex === null || submitting || answered}
+            onClick={handleSubmit}
             style={{ padding: 10 }}
             >
-            Submit (placeholder)
+            {submitting ? "Submitting..." : answered ? "Submitted" : "Submit"}
             </button>
         </div>
         </div>

@@ -66,20 +66,20 @@ export default function Login({ onAuth }) {
                 Log in now!
               </h1>
 
-              <button
+              {/* <button
                 type="button"
                 className="flex h-14 w-full items-center justify-center gap-4 border border-black/25 bg-white text-xl transition hover:bg-neutral-50"
               >
                 <span className="text-2xl text-[#4285F4]">G</span>
                 Continue with Google
-              </button>
+              </button> */}
 
               {/* Divider */}
-              <div className="my-6 flex items-center gap-4 text-lg text-black/70">
+              {/* <div className="my-6 flex items-center gap-4 text-lg text-black/70">
                 <div className="h-px flex-1 bg-black/30" />
                 <span>Or log in with email</span>
                 <div className="h-px flex-1 bg-black/30" />
-              </div>
+              </div> */}
 
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <label className="flex flex-col gap-2">

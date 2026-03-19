@@ -8,8 +8,8 @@ router.post("/register", async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        if (!email || !password) {
-            return res.status(400).json({ error: "Email and password required"});
+        if (!firstName || !lastName || !email || !password) {
+            return res.status(400).json({ error: "All fields required"});
         }
 
         const existingUser = await User.findOne({ email });
@@ -20,6 +20,8 @@ router.post("/register", async (req, res) => {
         const passwordHash = await bcrypt.hash(password, 10);
 
         const user = await User.create({
+            firstName,
+            lastName,
             email,
             passwordHash
         });

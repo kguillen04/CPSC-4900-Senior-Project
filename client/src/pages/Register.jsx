@@ -6,6 +6,9 @@ import { postJSON } from "../api.js";
 export default function Register({ onAuth }) {
   const navigate = useNavigate();
 
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -18,13 +21,20 @@ export default function Register({ onAuth }) {
     setError("");
 
     try {
-      const data = await postJSON("/api/auth/register", { email, password });
+      const data = await postJSON("/api/auth/register", { 
+        firstName,
+        lastName,
+        email, 
+        password 
+});
 
       localStorage.setItem(
         "user",
         JSON.stringify({
           userId: data.userId,
           email: data.email ?? email,
+          firstName: data.firstName ?? firstName,
+          lastName: data.lastName ?? lastName,
         })
       );
 
@@ -64,7 +74,7 @@ export default function Register({ onAuth }) {
                 Sign up for Adaptly!
               </h1>
 
-              <button
+              {/* <button
                 type="button"
                 className="flex h-14 w-full items-center justify-center gap-4 border border-black/25 bg-white text-xl transition hover:bg-neutral-50"
               >
@@ -76,9 +86,33 @@ export default function Register({ onAuth }) {
                 <div className="h-px flex-1 bg-black/30" />
                 <span>Or sign up with email</span>
                 <div className="h-px flex-1 bg-black/30" />
-              </div>
+              </div> */}
 
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <div className="flex gap-4">
+                  <label className="flex w-1/2 flex-col gap-2">
+                    <span className="text-xl">First name</span>
+                    <input
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      type="text"
+                      required
+                      className="h-14 border border-black/25 px-4 text-lg outline-none focus:border-primary"
+                    />
+                  </label>
+
+                  <label className="flex w-1/2 flex-col gap-2">
+                    <span className="text-xl">Last name</span>
+                    <input
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      type="text"
+                      required
+                      className="h-14 border border-black/25 px-4 text-lg outline-none focus:border-primary"
+                    />
+                  </label>
+                </div>
+
                 <label className="flex flex-col gap-2">
                   <span className="text-xl">Email</span>
                   <input

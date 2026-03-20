@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post("/register", async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { firstName, lastName,email, password } = req.body;
 
         if (!firstName || !lastName || !email || !password) {
             return res.status(400).json({ error: "All fields required"});

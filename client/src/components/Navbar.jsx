@@ -49,7 +49,7 @@ export default function Navbar() {
             onClick={() => setOpen(!open)}
             className="flex items-center gap-2 rounded-xl bg-primary px-4 py-2 text-lg font-medium transition hover:bg-primary-dark"
           >
-            {user.firstName || "Profile"}
+            {user.firstName || "Menu"}
             <span className="text-sm">▾</span>
           </button>
 

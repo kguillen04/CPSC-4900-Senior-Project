@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getJSON, postJSON } from "../api";
+import Navbar from "../components/Navbar";
 
 export default function Quiz() {
     const navigate = useNavigate();
@@ -76,17 +77,34 @@ export default function Quiz() {
     }, []);
 
     if (loading) {
-        return <div style={{ maxWidth: 700, margin: "40px auto" }}>Loading question...</div>;
+        return (
+        <div className="min-h-screen bg-page">
+            <div className="flex min-h-screen flex-col bg-white">
+            <Navbar />
+            <div className="flex flex-1 items-center justify-center text-xl text-black/70">
+                Loading question...
+            </div>
+            </div>
+        </div>
+        );
     }
 
-    if (error) {
+    if (error && !question) {
         return (
-        <div style={{ maxWidth: 700, margin: "40px auto", fontFamily: "sans-serif" }}>
-            <h2>Quiz</h2>
-            <p style={{ color: "crimson" }}>{error}</p>
-            <button onClick={loadQuestion} style={{ padding: 10, marginTop: 10 }}>
-            Try again
-            </button>
+        <div className="min-h-screen bg-page">
+            <div className="flex min-h-screen flex-col bg-white">
+            <Navbar />
+            <main className="mx-auto flex w-full max-w-4xl flex-1 flex-col px-8 py-12">
+                <h1 className="text-4xl font-semibold">Quiz</h1>
+                <p className="mt-4 text-red-600">{error}</p>
+                <button
+                onClick={loadQuestion}
+                className="mt-6 w-fit rounded-xl bg-primary px-5 py-3 text-lg font-medium transition hover:bg-primary-dark"
+                >
+                Try again
+                </button>
+            </main>
+            </div>
         </div>
         );
     }
@@ -96,89 +114,110 @@ export default function Quiz() {
     const answered = feedback !== null;
 
     return (
-        <div style={{ maxWidth: 700, margin: "40px auto", fontFamily: "sans-serif" }}>
-        <h2>Quiz</h2>
+        <div className="min-h-screen bg-page">
+        <div className="flex min-h-screen flex-col bg-white">
+            <Navbar />
 
-        <div style={{ marginTop: 12, color: "#555" }}>
-            <b>Concept:</b> {question.concept} &nbsp; | &nbsp;
-            <b>Difficulty:</b> {question.difficulty}
-        </div>
+            <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-8 py-10">
+            <section className="mx-auto w-full max-w-4xl">
+                <h1 className="text-center text-5xl font-semibold capitalize tracking-tight">
+                {question.concept}
+                </h1>
 
-        <div
-            style={{
-            marginTop: 16,
-            padding: 16,
-            border: "1px solid #ddd",
-            borderRadius: 8,
-            whiteSpace: "pre-wrap",
-            }}
-        >
-            {question.prompt}
-        </div>
-
-        <div style={{ marginTop: 16, display: "grid", gap: 10 }}>
-            {question.choices.map((choice, idx) => {
-            const isSelected = selectedIndex === idx;
-            const isCorrectChoice = answered && feedback?.correctIndex === idx;
-            const isWrongSelected = answered && isSelected && !feedback?.correct;
-
-            let background = "white";
-            if (isSelected) background = "#f3f4f6";
-            if (isCorrectChoice) background = "#dcfce7"; // light green
-            if (isWrongSelected) background = "#fee2e2"; // light red
-
-            return (
-                <button
-                key={idx}
-                onClick={() => setSelectedIndex(idx)}
-                disabled={answered}
-                style={{
-                    padding: 12,
-                    textAlign: "left",
-                    borderRadius: 8,
-                    border: "1px solid #ddd",
-                    background,
-                    cursor: answered ? "default" : "pointer",
-                }}
-                >
-                {choice}
-                </button>
-            );
-            })}
-        </div>
-
-        {feedback && (
-            <div
-            style={{
-                marginTop: 16,
-                padding: 12,
-                border: "1px solid #ddd",
-                borderRadius: 8,
-            }}
-            >
-            <div style={{ fontWeight: "bold" }}>
-                {feedback.correct ? "Correct!" : "Incorrect"}
-            </div>
-            {feedback.explanation && (
-                <div style={{ marginTop: 8, whiteSpace: "pre-wrap" }}>
-                {feedback.explanation}
+                <div className="mt-10">
+                <p className="whitespace-pre-wrap text-xl leading-8 text-black/85">
+                    {question.prompt}
+                </p>
                 </div>
-            )}
+
+                <div className="mt-8">
+                <h2 className="text-2xl font-semibold">Select 1 answer:</h2>
+
+                <div className="mt-4">
+                   {question.choices.map((choice, idx) => {
+                    const isSelected = selectedIndex === idx;
+                    const isCorrectSelected = answered && feedback?.correct && isSelected;
+                    const isWrongSelected = answered && !feedback?.correct && isSelected;
+
+                    let rowClasses =
+                        "flex w-full items-center gap-4 border-t border-black/25 px-0 py-5 text-left transition";
+
+                    if (!answered && isSelected) {
+                        rowClasses += " bg-primary/15";
+                    }
+
+                    if (isCorrectSelected) {
+                        rowClasses += " bg-green-100";
+                    }
+
+                    if (isWrongSelected) {
+                        rowClasses += " bg-neutral-200";
+                    }
+
+                    return (
+                        <button
+                        key={idx}
+                        onClick={() => setSelectedIndex(idx)}
+                        disabled={answered}
+                        className={rowClasses}
+                        >
+                        <div className="ml-1 flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary text-lg font-medium text-black">
+                            {String.fromCharCode(65 + idx)}
+                        </div>
+
+                        <span className="text-xl text-black/85">{choice}</span>
+                        </button>
+                    );
+                    })}
+
+                    <div className="border-t border-black/25" />
+                </div>
+                </div>
+
+                {error && question && (
+                <div className="mt-6 text-sm text-red-600">{error}</div>
+                )}
+
+                {feedback && (
+                    <div className="mt-8 rounded-2xl border border-black/15 bg-neutral-50 p-5">
+                        <div className="text-xl font-semibold">
+                        {feedback.correct ? "Correct!" : "Not quite."}
+                        </div>
+
+                        {feedback.correct && feedback.explanation && (
+                        <p className="mt-3 whitespace-pre-wrap text-lg leading-7 text-black/75">
+                            {feedback.explanation}
+                        </p>
+                        )}
+                    </div>
+                )}
+            </section>
+            </main>
+
+            <footer className="border-t border-primary/40 px-8 py-4">
+            <div className="mx-auto flex max-w-5xl items-center justify-end gap-6">
+                <button
+                onClick={loadQuestion}
+                className="text-xl font-medium text-primary-dark transition hover:opacity-80"
+                >
+                Skip
+                </button>
+
+                <button
+                    disabled={submitting || (!answered && selectedIndex === null)}
+                    onClick={() => {
+                        if (answered) {
+                        loadQuestion();
+                        } else {
+                        handleSubmit();
+                        }
+                    }}
+                    className="rounded-xl bg-primary px-7 py-2.5 text-xl font-medium text-black transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                    {submitting ? "Checking..." : answered ? "Next" : "Check"}
+                </button>
             </div>
-        )}
-
-        <div style={{ marginTop: 16, display: "flex", gap: 10 }}>
-            <button onClick={loadQuestion} style={{ padding: 10 }}>
-            Next question
-            </button>
-
-            <button
-            disabled={selectedIndex === null || submitting || answered}
-            onClick={handleSubmit}
-            style={{ padding: 10 }}
-            >
-            {submitting ? "Submitting..." : answered ? "Submitted" : "Submit"}
-            </button>
+            </footer>
         </div>
         </div>
     );

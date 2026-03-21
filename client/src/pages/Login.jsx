@@ -22,7 +22,12 @@ export default function Login({ onAuth }) {
 
       localStorage.setItem(
         "user",
-        JSON.stringify({ userId: data.userId, email: data.email })
+        JSON.stringify({ 
+            userId: data.userId, 
+            email: data.email,
+            firstName: data.firstName,
+            lastName: data.lastName,
+         })
       );
 
       if (onAuth) onAuth(data);

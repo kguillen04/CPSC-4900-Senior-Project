@@ -41,6 +41,8 @@ export default function Dashboard() {
           borderRadius: 8,
         }}
       >
+        <p><b>First Name:</b> {user.firstName}</p>
+        <p><b>Last Name:</b> {user.lastName}</p>
         <p><b>Email:</b> {user.email}</p>
         <p><b>User ID:</b> {user.userId}</p>
       </div>

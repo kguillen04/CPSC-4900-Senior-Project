@@ -21,4 +21,18 @@ CPSC-4900-Senior-Project/
 │       │   ├── Login.jsx
 │       │   ├── Quiz.jsx
 │       │   ├── Register.jsx
+│       │   └── EditProfile.jsx
+├── server/
+│   ├── models/
+│   │   ├── Attempt.js
+│   │   ├── Question.js
+│   │   ├── User.js
+│   ├── routes/
+│   │   ├── attempts.js
+│   │   ├── auth.js
+│   │   ├── questions.js
+│   │   ├── users.js
+│   └── scripts/
+│   │   └── seedQuestions.js
+
 ```

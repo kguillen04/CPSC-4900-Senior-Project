@@ -35,6 +35,11 @@ const userSchema = new mongoose.Schema({
         required: true 
     },
 
+    bio: {
+        type: String,
+        required: false,
+    },
+
     mastery: {
         type: [masterySchema],
         default: [

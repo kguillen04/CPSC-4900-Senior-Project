@@ -60,13 +60,23 @@ export default function Dashboard() {
                   <h1 className="text-5xl font-medium tracking-tight text-black">
                     Welcome {user.firstName} {user.lastName}
                   </h1>
-                  <button className="mt-2 text-xl text-black/70 underline underline-offset-4">
-                    Add a bio
-                  </button>
+                  {user.bio ? (
+                    <p className="mt-2 text-xl text-black/70">{user.bio}</p>
+                  ) : (
+                    <button 
+                      onClick={() => navigate("/edit-profile")}
+                      className="mt-2 text-xl text-black/70 underline underline-offset-4"
+                    >
+                      Add a bio.
+                    </button>
+                  )}
                 </div>
               </div>
 
-              <button className="rounded-xl border border-black/25 px-4 py-2 text-xl font-medium transition hover:bg-neutral-50">
+              <button
+                onClick={() => navigate("/edit-profile")}
+                className="rounded-xl border border-black/25 px-4 py-2 text-xl font-medium transition hover:bg-neutral-50"
+              >
                 Edit Profile
               </button>
             </div>

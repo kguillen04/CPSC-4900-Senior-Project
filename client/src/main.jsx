@@ -10,6 +10,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Quiz from "./pages/Quiz";
+import EditProfile from "./pages/EditProfile";
 import "./index.css";
 
 const router = createBrowserRouter([
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: "quiz",
         element: <Quiz />
+      },
+      {
+        path: "edit-profile",
+        element: <EditProfile />
       },
     ],
   },

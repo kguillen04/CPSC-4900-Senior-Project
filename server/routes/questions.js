@@ -8,7 +8,7 @@ router.get("/next", async (req, res) => {
         const { concept, difficulty } = req.query;
 
         const filter = {};
-        if (concept) filter.concept = concept;
+        if (concept) filter.concept = concept.toLowerCase();
         if (difficulty) filter.difficulty = Number(difficulty);
 
         const results = await Question.aggregate([

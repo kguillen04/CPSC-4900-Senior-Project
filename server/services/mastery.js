@@ -43,18 +43,18 @@ export function getTargetScore(correct, difficulty) {
     };
 
     const incorrectTargets = {
-        1: 0.40,
-        2: 0.32,
+        1: 0.10,
+        2: 0.16,
         3: 0.24,
-        4: 0.16,
-        5: 0.10,
+        4: 0.32,
+        5: 0.40,
     }
 
-    const difficulty = Number(difficulty);
+    const numDifficulty = Number(difficulty);
 
     return correct 
-        ? correctTargets[difficulty] :
-          incorrectTargets[difficulty];
+        ? correctTargets[numDifficulty] :
+          incorrectTargets[numDifficulty];
 }
 
 export function updateMastery(oldScore, correct, difficulty, alpha=ALPHA) {
@@ -65,7 +65,7 @@ export function updateMastery(oldScore, correct, difficulty, alpha=ALPHA) {
 
 export function updateUserMastery(user, concept, correct, difficulty) {
     const oldScore = getMasteryScore(user, concept);
-    const newScore = updatMastery(oldScore, correct, difficulty);
+    const newScore = updateMastery(oldScore, correct, difficulty);
 
     setMasteryScore(user, concept, newScore);
 

@@ -4,7 +4,9 @@ Demo: [Insert Link]
 
 ## Overview
 
+
 ## Stack
+Adaptly is implemented utilizing a MERN Stack: MongoDB, Express.js, React, and Node.js.
 
 ## Code Structure
 
@@ -32,7 +34,17 @@ CPSC-4900-Senior-Project/
 │   │   ├── auth.js
 │   │   ├── questions.js
 │   │   ├── users.js
-│   └── scripts/
-│   │   └── seedQuestions.js
+│   ├── scripts/
+│   │   ├── seedQuestions.js
+│   └── services/
+│       ├── mastery.js
+│       └── question.js
 
 ```
+
+## API Routes
+
+### Base URL
+- Development: `http://localhost:5173`
+
+### Authentication Routes

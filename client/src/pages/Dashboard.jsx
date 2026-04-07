@@ -118,7 +118,7 @@ export default function Dashboard() {
                     {concepts.map((concept) => (
                       <button
                         key={concept.name}
-                        onClick={() => navigate("/quiz")}
+                        onClick={() => navigate(`/quiz?concept=${concept.name.toLowerCase()}`)}
                         className="rounded-2xl bg-primary/80 p-5 text-left transition hover:scale-[1.01] hover:bg-primary"
                       >
                         <div className="text-2xl font-medium text-black">

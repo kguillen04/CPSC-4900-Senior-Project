@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { getJSON, postJSON } from "../api";
 import Navbar from "../components/Navbar";
 
 export default function Quiz() {
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
 
     const [question, setQuestion] = useState(null);
     const [selectedIndex, setSelectedIndex] = useState(null);
@@ -16,8 +17,10 @@ export default function Quiz() {
     const [submitting, setSubmitting] = useState(false);
 
     // hardcoding for now, but we will make it adaptive later
-    const concept = "variables";
-    const difficulty = 2;
+    const [mastery, setMastery] = useState(null);
+    const [selectedDifficulty, setSelectedDifficulty] = useState(null);
+
+    const concept = searchParams.get("concept");
 
     async function loadQuestion() {
         setLoading(true);
@@ -26,10 +29,25 @@ export default function Quiz() {
         setFeedback(null);
 
         try {
-            const q = await getJSON(
-                `/api/questions/next?concept=${encodeURIComponent(concept)}&difficulty=${difficulty}`
+            const stored = JSON.parse(localStorage.getItem("user") || "null");
+            
+            if (!stored?.userId) {
+                navigate("/login");
+                return;
+            }
+
+            if (!concept) {
+                setError("No concept specified.");
+                setQuestion(null);
+                return;
+            }
+
+            const result = await getJSON(
+                `/api/questions/next?userId=${encodeURIComponent(stored.userId)}&concept=${encodeURIComponent(concept)}`
             );
-            setQuestion(q);
+            setQuestion(result.question);
+            setMastery(result.mastery);
+            setSelectedDifficulty(result.selectedDifficulty);
         } catch (err) {
             setError(err.message);
             setQuestion(null);
@@ -74,7 +92,7 @@ export default function Quiz() {
         }
 
         loadQuestion();
-    }, []);
+    }, [navigate, concept]);
 
     if (loading) {
         return (

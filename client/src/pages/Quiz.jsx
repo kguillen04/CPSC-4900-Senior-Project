@@ -3,6 +3,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { getJSON, postJSON } from "../api";
 import Navbar from "../components/Navbar";
 
+const TOTAL_QUESTIONS = 5; 
+
 export default function Quiz() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
@@ -16,9 +18,13 @@ export default function Quiz() {
     const [feedback, setFeedback] = useState(null);
     const [submitting, setSubmitting] = useState(false);
 
-    // hardcoding for now, but we will make it adaptive later
     const [mastery, setMastery] = useState(null);
     const [selectedDifficulty, setSelectedDifficulty] = useState(null);
+
+    const[questionsAnswered, setQuestionsAnswered] = useState(0);
+    const[questionsCorrect, setQuestionsCorrect] = useState(0);
+    const[startMastery, setStartMastery] = useState(null);
+    const[endMastery, setEndMastery] = useState(null);
 
     const concept = searchParams.get("concept");
 
@@ -48,6 +54,10 @@ export default function Quiz() {
             setQuestion(result.question);
             setMastery(result.mastery);
             setSelectedDifficulty(result.selectedDifficulty);
+
+            if (questionsAnswered === 0 && startMastery === null && result.mastery != null) {
+                setStartMastery(result.mastery);
+            }
         } catch (err) {
             setError(err.message);
             setQuestion(null);
@@ -76,12 +86,39 @@ export default function Quiz() {
             });
 
             setFeedback(result);
+            setQuestionsAnswered(prev => prev + 1);
+
+            if (result.correct) {
+                setQuestionsCorrect(prev => prev + 1);
+            }
+
+            if (result.updatedMastery !== undefined) {
+                setMastery(result.updatedMastery);
+                setEndMastery(result.updatedMastery.find(m => m.concept === concept)?.score || null);
+                console.log("End Mastery:", endMastery);
+            }
         } catch (err) {
             setError(err.message);
         } finally {
             setSubmitting(false);
         }
+    }
 
+    function handleNext() {
+        if (questionsAnswered >= TOTAL_QUESTIONS) {
+            navigate("/quiz-summary", {
+                state: {
+                    concept,
+                    totalQuestions: TOTAL_QUESTIONS,
+                    questionsCorrect,
+                    startMastery,
+                    endMastery,
+                }
+            });
+            return;
+        }
+
+        loadQuestion();
     }
 
     useEffect(() => {
@@ -130,6 +167,7 @@ export default function Quiz() {
     if (!question) return null;
 
     const answered = feedback !== null;
+    const questionNum = Math.min(questionsAnswered + (answered ? 0 : 1), TOTAL_QUESTIONS);
 
     return (
         <div className="min-h-screen bg-page">
@@ -138,6 +176,10 @@ export default function Quiz() {
 
             <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-8 py-10">
             <section className="mx-auto w-full max-w-4xl">
+                <div className = "text-center text-sm text-black/60">
+                    Question {questionNum} of {TOTAL_QUESTIONS}
+                </div>
+
                 <h1 className="text-center text-5xl font-semibold capitalize tracking-tight">
                 {question.concept}
                 </h1>
@@ -216,6 +258,7 @@ export default function Quiz() {
             <div className="mx-auto flex max-w-5xl items-center justify-end gap-6">
                 <button
                 onClick={loadQuestion}
+                disabled={answered || questionsAnswered >= TOTAL_QUESTIONS}
                 className="text-xl font-medium text-primary-dark transition hover:opacity-80"
                 >
                 Skip
@@ -225,14 +268,14 @@ export default function Quiz() {
                     disabled={submitting || (!answered && selectedIndex === null)}
                     onClick={() => {
                         if (answered) {
-                        loadQuestion();
+                            handleNext();
                         } else {
-                        handleSubmit();
+                            handleSubmit();
                         }
                     }}
                     className="rounded-xl bg-primary px-7 py-2.5 text-xl font-medium text-black transition hover:bg-primary-dark disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                    {submitting ? "Checking..." : answered ? "Next" : "Check"}
+                    {submitting ? "Checking..." : answered ? questionsAnswered >= TOTAL_QUESTIONS ? "Finish" : "Next" : "Check"}
                 </button>
             </div>
             </footer>

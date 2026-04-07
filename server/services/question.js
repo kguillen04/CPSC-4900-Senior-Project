@@ -78,8 +78,8 @@ export async function nextQuestion(userId, concept, mastery) {
 
     // 3. neighboring difficulty, unseen, not recent
     for (const diff of [
-        clampDifficulty(targetDifficulty - 1),
-        clampDifficulty(targetDifficulty + 1),
+        normalizeDifficulty(targetDifficulty - 1),
+        normalizeDifficulty(targetDifficulty + 1),
     ]) {
         question = await sample({
         concept,

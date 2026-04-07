@@ -11,6 +11,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Quiz from "./pages/Quiz";
 import EditProfile from "./pages/EditProfile";
+import QuizSummary from "./pages/QuizSummary";
 import "./index.css";
 
 const router = createBrowserRouter([
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
       {
         path: "edit-profile",
         element: <EditProfile />
+      },
+      {
+        path: "quiz-summary",
+        element: <QuizSummary />
       },
     ],
   },

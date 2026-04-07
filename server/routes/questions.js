@@ -1,5 +1,5 @@
 import express from "express";
-import mongoose from "mongoose";
+import mongoose, { set } from "mongoose";
 import User from "../models/User.js";
 import Question from "../models/Question.js";
 import { getMasteryScore } from "../services/mastery.js";

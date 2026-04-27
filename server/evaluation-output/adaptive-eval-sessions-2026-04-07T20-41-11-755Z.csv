@@ -1,0 +1,10 @@
+profile,concept,questionsAnswered,numCorrect,accuracy,startingMastery,endingMastery,masteryGain,avgDifficulty
+Struggling,variables,5,1,0.200,0.500,0.409,-0.091,3.000
+Struggling,conditionals,5,3,0.600,0.500,0.553,0.053,3.000
+Struggling,loops,5,1,0.200,0.500,0.383,-0.117,2.600
+Improving,variables,5,3,0.600,0.500,0.514,0.014,2.600
+Improving,conditionals,5,2,0.400,0.500,0.477,-0.023,3.400
+Improving,loops,5,2,0.400,0.500,0.477,-0.023,2.600
+Strong,variables,5,5,1.000,0.500,0.654,0.154,3.000
+Strong,conditionals,5,4,0.800,0.500,0.577,0.077,2.600
+Strong,loops,5,5,1.000,0.500,0.676,0.176,3.400

@@ -40,8 +40,24 @@ async function sample(match) {
     return results[0] || null;
 }
 
-export async function nextQuestion(userId, concept, mastery) {
-    const targetDifficulty = chooseVariedDifficulty(mastery);
+export function chooseRandomDifficulty() {
+    return Math.floor(Math.random() * 5) + 1;
+}
+
+export function chooseTargetDifficulty(mastery, policy = "adaptive") {
+    if (policy === "adaptive") {
+        return chooseVariedDifficulty(mastery);
+    }
+
+    if (policy === "random") {
+        return chooseRandomDifficulty();
+    }
+
+    throw new Error(`Unknown policy: ${policy}`);
+}
+
+export async function nextQuestion(userId, concept, mastery, policy = "adaptive") {
+    const targetDifficulty = chooseTargetDifficulty(mastery, policy);
     const recentIds = await recentQuestionIds(userId,concept, 5);
     const attemptedIds = await attemptedQuestionIds(userId, concept);
 
@@ -57,6 +73,7 @@ export async function nextQuestion(userId, concept, mastery) {
         return {
         question,
         targetDifficulty,
+        policy,
         strategy: "exact-unseen",
         };
     }
@@ -72,6 +89,7 @@ export async function nextQuestion(userId, concept, mastery) {
         return {
         question,
         targetDifficulty,
+        policy,
         strategy: "exact-not-recent",
         };
     }
@@ -93,6 +111,7 @@ export async function nextQuestion(userId, concept, mastery) {
         return {
             question,
             targetDifficulty: diff,
+            policy,
             strategy: "adjacent-unseen",
         };
         }
@@ -110,6 +129,7 @@ export async function nextQuestion(userId, concept, mastery) {
         return {
         question,
         targetDifficulty: question.difficulty,
+        policy,
         strategy: "concept-unseen",
         };
     }
@@ -124,6 +144,7 @@ export async function nextQuestion(userId, concept, mastery) {
         return {
         question,
         targetDifficulty: question.difficulty,
+        policy,
         strategy: "concept-not-recent",
         };
     }
@@ -138,6 +159,7 @@ export async function nextQuestion(userId, concept, mastery) {
     return {
         question,
         targetDifficulty: question.difficulty,
+        policy,
         strategy: "concept-any",
     };
 }

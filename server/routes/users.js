@@ -38,4 +38,16 @@ router.post("/:userId/profile", async (req, res) => {
     }
 });
 
+router.get("/:userId/mastery", async (req, res) => {
+    try{
+        const { userId } = req.params;
+
+        const user = await User.findById(userId).select("mastery");
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+    }
+})
+
 export default router;

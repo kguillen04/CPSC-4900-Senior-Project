@@ -5,12 +5,6 @@ export default function QuizSummary() {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // concept,
-  //                   totalQuestions: TOTAL_QUESTIONS,
-  //                   questionsCorrect,
-  //                   startMastery,
-  //                   endMastery,
-
   const {
     concept = "concept",
     totalQuestions = 10,

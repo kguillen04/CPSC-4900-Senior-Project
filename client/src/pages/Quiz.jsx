@@ -5,6 +5,13 @@ import Navbar from "../components/Navbar";
 
 const TOTAL_QUESTIONS = 5; 
 
+/**
+ * Quiz Page
+ * 
+ * This page presents users with quiz questions based on a specific concept. 
+ * It handles the entire quiz flow, including loading questions, submitting answers, providing feedback, and tracking progress. 
+ * The quiz adapts to the user's performance by selecting questions of appropriate difficulty and updating the user's mastery level for the concept.
+ */
 export default function Quiz() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();

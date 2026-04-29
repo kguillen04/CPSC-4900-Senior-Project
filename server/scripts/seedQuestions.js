@@ -4,6 +4,12 @@ import Question from "../models/Question.js";
 
 dotenv.config();
 
+/**
+ * Question Seeding Script
+ * 
+ * This script populates the MongoDB database with a predefined set of questions for the adaptive learning platform.
+ */
+
 const QUESTIONS = [
   // =========================
   // VARIABLES

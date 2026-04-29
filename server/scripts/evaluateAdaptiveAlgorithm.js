@@ -11,6 +11,36 @@ import { updateUserMastery, getMasteryScore } from "../services/mastery.js";
 
 dotenv.config();
 
+/**
+ * Evaluation Script
+ * 
+ * Runs controlled simulations to evaluate the ffectiveness of the adaptive learning algorithm
+ * compared to a random difficulty baselines. 
+ * 
+ * This script:
+ * - Simulates multiple learner profiles (Struggling, Improving, Strong)
+ * - Runs multiple trials per profile and policy
+ * - Executes full learning sessions across multiple concepts
+ * - Logs attempt-level and session-level data
+ * - Outputs results as CSV and JSON files for analysis
+ * 
+ * Key variables:
+ * - NUM_TRIALS: number of independent runs per condition
+ * - QUESTIONS_PER_SESSION: number of attempts per session
+ * - POLICIES: adaptive vs random difficulty selection
+ * 
+ * This file is central to the experimental evaluation described in the paper.
+ */
+
+/**
+ * Experiment Configuration
+ * 
+ * Defines the parameters used for evaluation:
+ * - Concepts tested
+ * - Policies compared
+ * - Number of trials
+ * - Session length
+ */
 const DB_NAME = "adaptive-learning";
 const CONCEPTS = ["variables", "conditionals", "loops"];
 const POLICIES = ["adaptive", "random"];
@@ -26,6 +56,18 @@ const JSON_PATH = path.join(OUTPUT_DIR, `adaptive-eval-full-${TIMESTAMP}.json`);
 
 const CLEAN_UP = true;
 
+/**
+ * Simulated Learner Profiles
+ * 
+ * Each profile defines a probability of answering correctly based on:
+ * - Question difficulty
+ * - Attempt number
+ * 
+ * Profiles:
+ * - Struggling: low accuracy, especially at higher difficulty levels
+ * - Improving: accuracy increases over time
+ * - Strong: consistently high accuracy
+ */
 const LEARNER_PROFILES = [
     {
         name: "Struggling",
@@ -73,6 +115,20 @@ const LEARNER_PROFILES = [
     },
 ];
 
+/**
+ * Helper Functions
+ * 
+ * - normalizeProbability: ensures probabilities are between 0 and 1
+ * - wrongIndex: selects a random incorrect choice index
+ * - csvEscape: escapes values for CSV formatting
+ * - toCsv: converts an array of objects to CSV string
+ * - ensureOutputDir: creates the output directory if it doesn't exist
+ * - createTestUser: creates a temporary user for evaluation
+ * - cleanupTestUser: deletes the test user and their attempts
+ * - resetConceptState: clears attempts for a specific concept to reset mastery
+ * - reloadUser: fetches the latest user data from the database
+ * - getQuestion: retrieves full question details if only an ID is provided
+ */
 function normalizeProbability(value) {
     return Math.max(0, Math.min(1, value));
 }
@@ -152,6 +208,19 @@ async function getQuestion(questionLike) {
     return fullQuestion;
 }
 
+/**
+ * Runs a single evaluation session for a given user, learner profile, concept, and policy (adaptive or random)
+ * 
+ * For each attempt in the session:
+ * 1. Selects a question using the specified policy
+ * 2. Simulates correctness based on the learner profile
+ * 3. Records attempt data
+ * 4. Updates user mastery
+ * 
+ * Returns:
+ * - attemptRows: detailed data for each attempt in the session
+ * - sessionSummary: aggregated data summarizing the session's outcomes
+ */
 async function runSession(user, profile, concept, policy, trial) {
     await resetConceptState(user._id, concept);
     user = await reloadUser(user._id);
@@ -231,6 +300,24 @@ async function runSession(user, profile, concept, policy, trial) {
     return { attemptRows, sessionSummary };
 }
 
+/**
+ * Main Evaluation Pipeline
+ * 
+ * Iterates over:
+ * - Learner profiles
+ * - Policies
+ * - Trials
+ * - Concepts
+ * 
+ * For each combination:
+ * - Creates a test user
+ * - Runs a complete session
+ * - Collects results
+ * 
+ * Outputs:
+ * - CSV files for attempts and session summaries
+ * - JSON file for full experiment data
+ */
 async function main() {
     const uri = process.env.ATLAS_URI;
     if (!uri) {

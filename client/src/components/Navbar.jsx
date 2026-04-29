@@ -1,6 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 
+/**
+ * Navbar Component
+ * 
+ * This component renders the navigation bar that appears at the top of the application. 
+ * It includes the application logo, a link to the dashboard, and user authentication controls (login/logout). 
+ * The navbar also displays the user's first name when logged in and provides a dropdown menu for profile access and logout.
+ */
 export default function Navbar() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);

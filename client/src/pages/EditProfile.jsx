@@ -3,6 +3,11 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { getJSON, postJSON } from "../api";
 
+/**
+ * Edit Profile Page
+ * 
+ * This page allows users to edit their profile information, including their first name, last name, and bio.
+ */
 export default function EditProfile() {
   const navigate = useNavigate();
 

@@ -1,6 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
+/**
+ * Landing Page
+ * 
+ * This is the landing page of the application, designed to provide an engaging introduction to new users.
+ */
 export default function Landing() {
   return (
     <div className="min-h-screen bg-page">

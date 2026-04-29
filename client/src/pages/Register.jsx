@@ -3,6 +3,12 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { postJSON } from "../api.js";
 
+/**
+ * Register Page
+ * 
+ * This page allows users to create a new account by providing their first name, last name, email, and password. 
+ * Upon successful registration, the user is automatically logged in and redirected to the dashboard.
+ */
 export default function Register({ onAuth }) {
   const navigate = useNavigate();
 

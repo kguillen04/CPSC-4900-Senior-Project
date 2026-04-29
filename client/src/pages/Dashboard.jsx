@@ -2,6 +2,13 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
+/**
+ * Dashboard Page
+ *  
+ * This page serves as the main hub for users after logging in. 
+ * It displays a welcome message, user profile information, and provides navigation to different sections such as concepts and progress. 
+ * The dashboard also includes a sidebar for easy access to these sections and a button to edit the user's profile.
+ */
 export default function Dashboard() {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);

@@ -1,6 +1,13 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
+/**
+ * Quiz Summary Page
+ * 
+ * This page displays a summary of the user's performance on a quiz for a specific concept. 
+ * It shows the total number of questions answered, the number of correct answers, the accuracy percentage, and the change in mastery level for the concept. 
+ * The page also provides options to retake the quiz or return to the dashboard.
+ */
 export default function QuizSummary() {
   const location = useLocation();
   const navigate = useNavigate();

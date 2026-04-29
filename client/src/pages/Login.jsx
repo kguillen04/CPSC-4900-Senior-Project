@@ -3,6 +3,12 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { postJSON } from "../api";
 
+/**
+ * Login Page
+ * 
+ * This page allows users to log in to their accounts using their email and password.
+ * Upon successful login, the user is redirected to the dashboard. 
+ */
 export default function Login({ onAuth }) {
   const navigate = useNavigate();
 

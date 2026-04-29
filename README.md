@@ -3,6 +3,8 @@
 ## Author
 Kevin Guillen, Yale Class of 2026
 
+<img width="1433" height="663" alt="Screenshot 2026-04-09 at 6 31 54 PM" src="https://github.com/user-attachments/assets/3bf15515-a470-4564-89b5-c24416e25cdf" />
+
 
 Demo: [Insert Link]
 

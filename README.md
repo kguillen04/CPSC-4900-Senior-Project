@@ -97,6 +97,9 @@ CPSC-4900-Senior-Project/
 - **POST `/api/users/:userId/profile`** - Update user profile  
   - Body: `firstName`, `lastName`, `bio`
   - Returns updated user information
+- **GET `/api/users/:userId/mastery`**
+  - Body: None
+  - Returns user mastery scores
 
 ---
 

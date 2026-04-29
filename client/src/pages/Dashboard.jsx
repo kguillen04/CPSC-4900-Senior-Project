@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { getJSON } from "../api"
 import Navbar from "../components/Navbar";
 
 /**
@@ -14,11 +15,11 @@ export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [activeView, setActiveView] = useState("concepts");
 
-  const concepts = [
-    { name: "Variables", progress: 0 },
-    { name: "Conditionals", progress: 0 },
-    { name: "Loops", progress: 0 },
-  ];
+  const [concepts, setConcepts] = useState([
+    { name: "Variables", key: "variables", progress: 0 },
+    { name: "Conditionals", key: "conditionals", progress: 0 },
+    { name: "Loops", key: "loops", progress: 0 },
+  ]);
 
   useEffect(() => {
     const stored = localStorage.getItem("user");
@@ -36,6 +37,36 @@ export default function Dashboard() {
       navigate("/login");
     }
   }, [navigate]);
+
+  useEffect(() => {
+    const userId = user?.userId || user?._id;
+    if (!userId) return;
+
+    async function fetchMastery() {
+      try {
+        const data = await getJSON(`/api/users/${userId}/mastery`);
+
+        console.log("Mastery data:", data);
+
+        setConcepts((prevConcepts) =>
+          prevConcepts.map((concept) => {
+            const masteryEntry = data.mastery.find(
+              (entry) => entry.concept === concept.key
+            );
+
+            return {
+              ...concept,
+              progress: masteryEntry ? masteryEntry.progress : 0,
+            };
+          })
+        );
+      } catch (err) {
+        console.error("Dashboard mastery fetch error:", err);
+      }
+    }
+
+    fetchMastery();
+  }, [user]);
 
   if (!user) return null;
 
@@ -125,7 +156,7 @@ export default function Dashboard() {
                     {concepts.map((concept) => (
                       <button
                         key={concept.name}
-                        onClick={() => navigate(`/quiz?concept=${concept.name.toLowerCase()}`)}
+                        onClick={() => navigate(`/quiz?concept=${concept.key}`)}
                         className="rounded-2xl bg-primary/80 p-5 text-left transition hover:scale-[1.01] hover:bg-primary"
                       >
                         <div className="text-2xl font-medium text-black">

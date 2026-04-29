@@ -7,6 +7,38 @@ import { updateUserMastery } from "../services/mastery.js";
 
 const router = express.Router();
 
+/**
+ * POST /api/attempts
+ * 
+ * Records a user's attempt at answering a question, updates their mastery, and returns feedback on the attempt.
+ * 
+ * Expected request body:
+ * - userId: MongoDB ObjectId of the user submitting the attempt
+ * - questionId: MondoDB ObjectId of the attempted question
+ * - selectedIndex: index of the answer choice selected by the user
+ * - responseTimeMs: optional response time in milliseconds
+ * 
+ * Workflow:
+ * 1. Validates required fields and ObjectId formats.
+ * 2. Retrieves the corresponding Question and User documents.
+ * 3. Checks if the selected answer is correct.
+ * 4. Stores the attempt in the Attempt collection.
+ * 5. Updates the user's mastery score for the relevant concept.
+ * 6. Returns correctness, feedback, explanation, and updated mastery data.
+ * 
+ * Response:
+ * - correct: boolean indicating if the attempt was correct
+ * - correctIndex: index of the correct answer choice
+ * - explanation: optional explanation for the correct answer
+ * - masteryUpdate: the change in mastery score resulting from this attempt
+ * - updatedMastery: the user's updated mastery array after applying the update
+ * - attemptId: MongoDB ObjectId of the created Attempt document
+ * 
+ * Error handling:
+ * - 400 Bad Request for missing fields, invalid ObjectIds, or out-of-bounds selectedIndex.
+ * - 404 Not Found if the User or Question does not exist.
+ * - 500 Server Error for unexpected issues during processing.
+*/
 router.post("/", async (req, res) => {
     try {
         const { userId, questionId, selectedIndex, responseTimeMs} = req.body;
@@ -58,9 +90,6 @@ router.post("/", async (req, res) => {
         );
 
         await user.save();
-
-        console.log("Mastery update:", masteryUpdate);
-        console.log("Updated mastery array:", user.mastery);
 
         return res.status(201).json({
             correct,

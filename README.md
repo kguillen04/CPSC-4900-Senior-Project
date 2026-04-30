@@ -80,8 +80,7 @@ CPSC-4900-Senior-Project/
 ## API Routes
 
 ### Base URL
-- Development: `http://localhost:3000/api`
-- Health Check: `GET /health` (if implemented)
+- Development: `http://localhost:5357/api`
 
 ---
 
@@ -133,4 +132,100 @@ CPSC-4900-Senior-Project/
     - `updatedMastery`
     - `attemptId`
 
----
+## Adaptive Learning Algorithm
+
+Adaptly maintains a mastery score for each concept, where:
+
+- Mastery ∈ [0, 1]
+- Initial mastery = 0.5
+
+After each question, mastery is updated using:
+
+\[
+M_{new} = M_{old} + \alpha (T - M_{old})
+\]
+
+Where:
+- \( \alpha = 0.15 \) (learning rate)
+- \( T \) = target score based on difficulty and correctness
+
+### Key Design Principles
+- Correct answers increase mastery more at higher difficulty levels  
+- Incorrect answers penalize mastery more at lower difficulty levels  
+- Difficulty is selected based on current mastery with slight randomness  
+
+## Evaluation
+
+The system is evaluated using simulated learners with different ability profiles:
+
+- Struggling learner  
+- Improving learner  
+- Strong learner  
+
+### Baselines
+- Random difficulty selection  
+- Fixed difficulty selection  
+
+Metrics analyzed:
+- Mastery progression over time  
+- Accuracy  
+- Difficulty distribution  
+
+Evaluation results are generated via:
+- `evaluateAdaptiveAlgorithm.js`
+- Jupyter notebooks in `/scripts`
+
+## Running the Project
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/kguillen04/CPSC-4900-Senior-Project.git
+cd CPSC-4900-Senior-Project
+```
+
+### 2. Install dependencies
+```bash
+cd server
+npm install
+
+cd ../client
+npm install
+```
+
+### 3. Set up environment variables
+Create a `.env` file in `/server`:
+```bash
+ATLAS_URI=mongodb+srv://kevinguillen_db_user:B-Widow12!@database-cluster.jyqvoek.mongodb.net/
+```
+
+Create a `.env` file in `/client`:
+```bash
+VITE_API_BASE=http://localhost:5050
+```
+
+### 4. Seed the database
+```bash
+cd server
+node scripts/seedQuestions.js
+```
+
+### 5. Run the backend
+```bash
+cd server
+npm run dev
+```
+
+### 6. Run the frontend
+```bash
+cd client
+npm run dev
+```
+
+## Future Work
+- More advanced mastery modeling (e.g., Bayesian Knowledge Tracing)
+- Expanded question bank across additional CS topics
+- Improved UI/UX and analytics dashboard
+- Real user study for empirical validation
+
+## Acknowledgements
+Developed as part of CPSC 4900 (Senior Project) at Yale University.

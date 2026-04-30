@@ -6,7 +6,7 @@ Kevin Guillen, Yale Class of 2026
 <img width="1433" height="663" alt="Screenshot 2026-04-09 at 6 31 54 PM" src="https://github.com/user-attachments/assets/3bf15515-a470-4564-89b5-c24416e25cdf" />
 
 
-Demo: [Insert Link]
+Demo: https://youtu.be/VPgiA7X6tjc
 
 ## Overview
 Adaptly is an adaptive learning platform designed for introductory computer science education. The system dynamically adjusts question difficulty based on a user's mastery of core concepts such as variables, conditionals, and loops.
@@ -140,14 +140,11 @@ Adaptly maintains a mastery score for each concept, where:
 - Initial mastery = 0.5
 
 After each question, mastery is updated using:
-
-\[
-M_{new} = M_{old} + \alpha (T - M_{old})
-\]
+  M_new = M_old + α (T - M_old)
 
 Where:
-- \( \alpha = 0.15 \) (learning rate)
-- \( T \) = target score based on difficulty and correctness
+- α = 0.15 (learning rate)
+- T = target score based on difficulty and correctness
 
 ### Key Design Principles
 - Correct answers increase mastery more at higher difficulty levels  
